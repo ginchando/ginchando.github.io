@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BF unit info - made by ntttoon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="css/fullart.css">
+<script src="../js/ga.js"></script>
+<script src="js/libs.js"></script>
+</head>
+
+<body>
+<nav class="w3-sidenav w3-white w3-card-2 w3-animate-left" style="width:250px" id="list">
+<form class="w3-form">
+  <div class="w3-input-group">      
+    <label class="w3-label w3-text-teal"><b>Input unit's name or elements (fire, water, etc)</b></label>
+    <input class="w3-input w3-border" name="search" type="text">
+  </div>
+  <button class="w3-btn w3-teal">Search</button>
+</form>
+</nav>
+<div id="sp_btn"></div>
+<div id="placeholder"> </div>
+<script>
+	var xmlhttp = new XMLHttpRequest();
+	var url = "data/units.json";
+	
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			myFunction(xmlhttp.responseText);
+		}
+	}
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+	
+	function myFunction(response) {
+		var arr = JSON.parse(response);
+		var i;
+		var out = "";
+		var s = getURLParameter('id');
+		var se = getURLParameter('search');
+		var re = new RegExp(se, 'gi');
+		var json_len = arr.brave.unit.length;
+		
+		for(i = 0; i < json_len; i++) {
+			var id = arr.brave.unit[i].id;
+			var name = arr.brave.unit[i].name;
+			var element = arr.brave.unit[i].element;
+			//
+			if (se == null){
+				document.getElementById("list").innerHTML += "<a style='color:" + nameColor(element) + "' " + "href='unitinfo_big.html?id=" + id + "'>" + name +"</a>";
+			}
+			if (name.match(re) || element.match(re)) {
+				document.getElementById("list").innerHTML += "<a style='color:" + nameColor(element) + "' " + "href='unitinfo_big.html?id=" + id + "&search=" + se + "'>" + name +"</a>";
+			}
+			//
+			if(id==s)
+			{
+				var cost = arr.brave.unit[i].cost;
+				var rarity = arr.brave.unit[i].rarity;
+				var ls = arr.brave.unit[i].ls['#text'];
+				var normalhit = arr.brave.unit[i].ls['@hit'];
+				var normaldc = arr.brave.unit[i].ls['@dc'];
+				var bb = arr.brave.unit[i].bb['#text'];
+				var bbhit = arr.brave.unit[i].bb['@hit'];
+				var bbdc = arr.brave.unit[i].bb['@dc'];
+				var bbcost = arr.brave.unit[i].bb['@cost'];
+				var sbb = arr.brave.unit[i].sbb['#text'];
+				var sbbhit = arr.brave.unit[i].sbb['@hit'];
+				var sbbdc = arr.brave.unit[i].sbb['@dc'];
+				var sbbcost = arr.brave.unit[i].sbb['@cost'];
+				var ubb = arr.brave.unit[i].ubb['#text'];
+				var ubbhit = arr.brave.unit[i].ubb['@hit'];
+				var ubbdc = arr.brave.unit[i].ubb['@dc'];
+				var ubbcost = arr.brave.unit[i].ubb['@cost'];
+				var escondition = arr.brave.unit[i].es['@condtion'];
+				var eseffect = arr.brave.unit[i].es['#text'];
+				var eseffect = arr.brave.unit[i].es['#text'];
+				var art = arr.brave.unit[i].art['@path'];
+				//
+				if(rarity == 8){
+					out+="<div class='fullbg8'>";
+					document.getElementById("sp_btn").innerHTML = "<a class='w3-btn w3-purple' style='position:absolute;top:0;right:0' href='unitinfo_bigsp.html?id=" + id + "&search=" + se + "'>OMNI Skills</a>";
+				}else{
+					out+="<div class='fullbg7'>";
+				}
+				out+="<div class='unit_ele'><img src=images/" + nameElement(element) + " width='40' height='40'></div>";
+				out+="<div class='unit_name'>" + name + "</div>"
+				//Leader skill
+				out+="<div class='box' style='top:100px;'>";
+					out+="<div class='box_subinfo'>" + normalhit + " hits / " + normaldc + " DC</div>";
+					out+="<div class='box_name'>Leader Skill</div>";
+					out+="<div class='box_info'>" + ls + "</div>";
+				out+="</div>";
+				//BB
+				out+="<div class='box' style='top:220px;'>";
+					out+="<div class='box_subinfo'>" + bbhit + " hits / " + bbdc + " DC / Cost: " + bbcost + " BC</div>";
+					out+="<div class='box_name'>Brave Burst</div>";
+					out+="<div class='box_info'>" + bb + "</div>";
+				out+="</div>";
+				//SBB
+				out+="<div class='box' style='top:340px;'>";
+					out+="<div class='box_subinfo'>" + sbbhit + " hits / " + sbbdc + " DC / Cost: " + sbbcost + " BC</div>";
+					out+="<div class='box_name'>Super Brave Burst</div>";
+					out+="<div class='box_info'>" + sbb + "</div>";
+				out+="</div>";
+				//UBB
+				out+="<div class='box' style='top:460px;'>";
+					out+="<div class='box_subinfo'>" + ubbhit + " hits / " + ubbdc + " DC / Cost: " + ubbcost + " BC</div>";
+					out+="<div class='box_name'>Ultimate Brave Burst</div>";
+					out+="<div class='box_info'>" + ubb + "</div>";
+				out+="</div>";
+				//ES
+				out+="<div class='box' style='top:580px;'>";
+					out+="<div class='box_name'>Extra Skill</div>";
+					out+="<div class='box_info'><u>Condition</u>: " + escondition + "<br/><u>Effect</u>: " + eseffect + "</div>";
+				out+="</div>";
+				//
+				out+="<div class='box_copyright'>Copyright by Alim/Gumi - Datamine: Deathmax/bravefrontierpros - Design & Dev: ntttoon</div>";
+				out+="<div class='art'><img src=" + art + "></div>";
+				}
+			}
+		out+="</div>";
+		document.getElementById("placeholder").innerHTML = out;
+	}
+</script>
+
+</body>
+</html>
